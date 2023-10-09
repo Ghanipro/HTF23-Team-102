@@ -1,6 +1,7 @@
 from flask import Flask, request,render_template, redirect,session,jsonify,url_for
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
+import os
 
 #solve all the errors in this code  
 
@@ -82,16 +83,24 @@ def login():
         
         if user and user.check_password(password):
             session['email'] = user.email
-            return redirect('./dashboard')
+            return redirect('/dashboard')
         else:
             return render_template('login.html',error='Invalid user')
     return render_template('login.html')
 
 
-@app.route('/generater',methods=['POST'])
+# # Route to serve the CSS file
+# @app.route('/assets/css/<path:generater')
+# def serve_css(generater):
+#     css_directory = os.path.join(os.getcwd(), 'assest', 'css')
+#     return send_from_directory(css_directory, generater)
+
+# Route for the generater page
+@app.route('/generater', methods=['GET'])
 def generater():
     
     return render_template('generater.html')
+
 
 
 # @app.route('/dashboard')
@@ -109,6 +118,7 @@ def dashboard():
     if 'email' in session:
         user = PasswordManager.query.filter_by(email=session['email']).first()
         passwordlist = PasswordManager.query.filter_by().all()
+    return render_template('dashboard.html')
 
 
 @app.route('/edit_password_name/<int:id>', methods=['GET', 'POST'])
